@@ -51,7 +51,12 @@ def get_db_config():
         "password": os.getenv("MSSQL_PASSWORD"),
         "database": os.getenv("MSSQL_DATABASE"),
         "port": os.getenv("MSSQL_PORT", "1433"),  # Default MSSQL port
-    }    
+    }
+    
+    # Debug logging
+    logger.info(f"MSSQL_USER: {config['user']}")
+    logger.info(f"MSSQL_DATABASE: {config['database']}")
+    logger.info(f"MSSQL_PASSWORD: {'SET' if config['password'] else 'NOT SET'}")    
     # Port support (Issue #8)
     port = os.getenv("MSSQL_PORT")
     if port:
@@ -86,9 +91,11 @@ def get_db_config():
         logger.info("Using Windows Authentication")
     else:
         # SQL Authentication - user and password are required
+        logger.info(f"Checking required vars: user={bool(config['user'])}, password={bool(config['password'])}, database={bool(config['database'])}")
         if not all([config["user"], config["password"], config["database"]]):
             logger.error("Missing required database configuration. Please check environment variables:")
             logger.error("MSSQL_USER, MSSQL_PASSWORD, and MSSQL_DATABASE are required")
+            logger.error(f"Current values: USER={config['user']}, DATABASE={config['database']}, PASSWORD={'***' if config['password'] else None}")
             raise ValueError("Missing required database configuration")
     
     return config
