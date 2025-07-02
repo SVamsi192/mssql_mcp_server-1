@@ -6,6 +6,12 @@ import pymssql
 from mcp.server import Server
 from mcp.types import Resource, Tool, TextContent
 from pydantic import AnyUrl
+from dotenv import load_dotenv
+import pathlib
+
+# Load environment variables from .env file in project root
+project_root = pathlib.Path(__file__).parent.parent.parent
+load_dotenv(project_root / '.env')
 
 # Configure logging
 logging.basicConfig(
